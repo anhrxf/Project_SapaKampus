@@ -1,6 +1,6 @@
 # SapaKampus
 
-SapaKampus adalah aplikasi web latihan komunikasi akademik yang berjalan di browser. Analisis pesan menggunakan aturan lokal sederhana; aplikasi ini tidak mengirim atau menyimpan teks pesan.
+SapaKampus adalah aplikasi web untuk mahasiswa berlatih menyusun pesan kepada dosen, terutama terkait perkuliahan, bimbingan, dan konsultasi akademik. Aplikasi berjalan di browser. Analisis pesan menggunakan aturan lokal sederhana; aplikasi ini tidak mengirim atau menyimpan teks pesan.
 
 ## Menjalankan aplikasi
 
@@ -15,9 +15,9 @@ Buka alamat lokal yang ditampilkan Vite (biasanya `http://localhost:5173`). Untu
 
 ## Fitur saat ini
 
-- Simulasi balasan dari empat persona dosen fiktif.
+- Simulasi balasan dari empat persona dosen fiktif untuk latihan, bukan balasan dari dosen sungguhan.
 - Analisis struktur pesan, skor panduan, dan saran diksi berbasis aturan.
-- Pembuatan template pesan akademik untuk bimbingan, perkuliahan, ujian, nilai, KRS/KHS, dokumen kampus, tenggat tugas, magang, dan tindak lanjut.
+- Pembuatan template pesan yang ditujukan kepada dosen untuk bimbingan, perkuliahan, ujian, nilai, konsultasi KRS/KHS, arahan dokumen akademik, tenggat tugas, magang, dan tindak lanjut.
 - Nama, NPM, dan mata kuliah/program wajib diisi saat membuat draf template; detail tambahan tetap opsional.
 - Panduan etika komunikasi.
 - Salin draf atau buka WhatsApp dengan teks yang sudah disiapkan; pesan tidak dikirim otomatis.

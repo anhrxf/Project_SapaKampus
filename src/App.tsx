@@ -37,16 +37,16 @@ const personas: Record<Persona, { name: string; description: string }> = {
 
 const templates = [
   { id: "guidance", name: "Meminta jadwal bimbingan", category: "Bimbingan" },
-  { id: "absence", name: "Meminta izin tidak hadir", category: "Perkuliahan" },
-  { id: "question", name: "Bertanya tentang materi", category: "Perkuliahan" },
+  { id: "absence", name: "Meminta izin tidak mengikuti kuliah", category: "Perkuliahan" },
+  { id: "question", name: "Bertanya tentang materi kuliah", category: "Perkuliahan" },
   { id: "schedule", name: "Menanyakan jadwal kuliah", category: "Perkuliahan" },
   { id: "exam", name: "Menanyakan jadwal atau materi ujian", category: "Perkuliahan" },
-  { id: "grade", name: "Meminta klarifikasi nilai", category: "Akademik" },
+  { id: "grade", name: "Meminta penjelasan tentang nilai", category: "Akademik" },
   { id: "deadline", name: "Memohon perpanjangan tenggat tugas", category: "Perkuliahan" },
-  { id: "krs", name: "Bertanya tentang KRS atau KHS", category: "Akademik" },
-  { id: "letter", name: "Menanyakan surat atau dokumen kampus", category: "Administrasi" },
+  { id: "krs", name: "Berkonsultasi tentang KRS atau KHS", category: "Konsultasi" },
+  { id: "letter", name: "Meminta arahan dosen tentang dokumen akademik", category: "Konsultasi" },
   { id: "internship", name: "Meminta arahan magang atau tugas akhir", category: "Bimbingan" },
-  { id: "followup", name: "Menindaklanjuti pesan", category: "Administrasi" },
+  { id: "followup", name: "Menindaklanjuti pesan kepada dosen", category: "Tindak lanjut" },
 ];
 
 function analyzeMessage(message: string): Analysis {
@@ -107,22 +107,22 @@ function analyzeMessage(message: string): Analysis {
 function makeReply(persona: Persona, score: number): string {
   if (persona === "friendly") {
     return score >= 50
-      ? "Halo! Boleh, kirimkan detail waktunya ya. Nanti kita atur."
-      : "Hai! Boleh jelaskan dulu keperluannya supaya saya bisa bantu?";
+      ? "Halo! Baik, silakan kirim detail mata kuliah dan waktu yang kamu maksud."
+      : "Halo! Boleh jelaskan mata kuliah dan maksud pesanmu terlebih dahulu?";
   }
   if (persona === "busy") {
     return score >= 60
-      ? "Baik. Kirimkan ringkasan dan pilihan waktu yang tersedia."
-      : "Mohon tuliskan nama, kelas, dan keperluan secara singkat.";
+      ? "Baik. Mohon kirim ringkasan pertanyaan serta mata kuliah atau kelasnya."
+      : "Mohon tuliskan nama, mata kuliah, dan tujuan pesan secara singkat.";
   }
   if (persona === "strict") {
     return score >= 80
-      ? "Baik. Silakan siapkan dokumen terkait dan datang pada jam kerja."
-      : "Mohon perbaiki format pesan: identitas, tujuan, dan permohonan.";
+      ? "Baik. Silakan lengkapi informasi pendukung dan ikuti ketentuan perkuliahan."
+      : "Mohon lengkapi pesan dengan identitas, konteks mata kuliah, dan tujuan yang jelas.";
   }
   return score >= 60
-    ? "Baik, terima kasih. Silakan kirimkan informasi pendukungnya."
-    : "Mohon lengkapi identitas dan tujuan pesan Anda terlebih dahulu.";
+    ? "Baik, terima kasih. Silakan sampaikan informasi pendukung terkait perkuliahan."
+    : "Mohon lengkapi identitas dan konteks mata kuliah agar saya dapat memahami pertanyaan Anda.";
 }
 
 function redactSensitiveData(text: string): string {
@@ -152,10 +152,10 @@ function createTemplate(
     exam: `Selamat siang, Bapak/Ibu.\n\n${identity}\nSaya ingin menanyakan informasi jadwal atau materi ujian${context ? ` terkait ${context}` : ""}.\n\nApabila informasi tersebut sudah tersedia, mohon arahannya. Terima kasih.`,
     grade: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nMohon izin bertanya mengenai nilai${context ? ` pada ${context}` : " perkuliahan ini"}. Jika berkenan, saya ingin memahami bagian yang perlu saya perbaiki.\n\nTerima kasih atas waktu dan arahannya.`,
     deadline: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nMohon izin mengajukan perpanjangan waktu pengumpulan tugas${context ? ` karena ${context}` : ""}.\n\nSaya memahami keputusan tetap mengikuti kebijakan perkuliahan. Terima kasih atas pertimbangannya.`,
-    krs: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nSaya ingin bertanya mengenai ${context || "pengisian KRS atau informasi KHS"}.\n\nApabila berkenan, mohon arahan mengenai prosedur atau pihak yang dapat saya hubungi. Terima kasih.`,
-    letter: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nMohon informasi mengenai pengajuan surat atau dokumen kampus${context ? ` untuk keperluan ${context}` : ""}.\n\nApabila berkenan, mohon arahan mengenai prosedur dan persyaratannya. Terima kasih.`,
+    krs: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nSaya ingin berkonsultasi dengan Bapak/Ibu mengenai ${context || "pengisian KRS atau informasi KHS"}.\n\nApabila berkenan, mohon arahan akademik yang perlu saya perhatikan. Terima kasih.`,
+    letter: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nSaya ingin meminta arahan Bapak/Ibu mengenai dokumen akademik${context ? ` untuk keperluan ${context}` : ""}.\n\nApabila berkenan, mohon informasi tentang hal yang perlu saya siapkan. Terima kasih.`,
     internship: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nSaya ingin meminta arahan mengenai ${context || "rencana magang atau tugas akhir"}.\n\nApabila Bapak/Ibu berkenan, mohon informasi mengenai langkah awal yang sebaiknya saya persiapkan. Terima kasih.`,
-    followup: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nMohon izin menindaklanjuti pesan saya sebelumnya terkait ${context || "keperluan akademik tersebut"}.\n\nApabila Bapak/Ibu berkenan, mohon informasinya. Terima kasih.`,
+    followup: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nMohon izin menindaklanjuti pesan saya sebelumnya kepada Bapak/Ibu terkait ${context || "keperluan akademik tersebut"}.\n\nApabila Bapak/Ibu berkenan, mohon informasinya. Terima kasih.`,
   };
   return messages[id] ?? "";
 }
@@ -245,29 +245,29 @@ function App() {
       <main className="page-wrap">
         <section className="hero">
           <div>
-            <p className="eyebrow">KOMUNIKASI AKADEMIK, TANPA CANGGUNG</p>
-            <h1>Pesan yang baik,<br /><span>awal percakapan yang baik.</span></h1>
-            <p className="hero-copy">Berlatih menyusun pesan yang sopan, jelas, dan tetap terasa seperti dirimu.</p>
+            <p className="eyebrow">LATIHAN PESAN MAHASISWA KEPADA DOSEN</p>
+            <h1>Hubungi dosen dengan<br /><span>jelas dan penuh hormat.</span></h1>
+            <p className="hero-copy">Latih pesan untuk keperluan kuliah, bimbingan, dan konsultasi akademik.</p>
           </div>
           <div className="hero-art" aria-hidden="true">
             <div className="art-circle" />
             <div className="art-card art-card-one">“Selamat pagi, Bu...”</div>
-            <div className="art-card art-card-two">✓ Pesan siap dikirim</div>
+            <div className="art-card art-card-two">✓ Draf untuk dosen</div>
             <div className="art-sparkle">✳</div>
           </div>
         </section>
 
         <nav className="tab-nav" aria-label="Navigasi utama">
           <button className={page === "simulator" ? "nav-tab active" : "nav-tab"} onClick={() => setPage("simulator")}>
-            <span className="tab-icon">✎</span> Simulasi pesan
+            <span className="tab-icon">✎</span> Simulasi ke dosen
           </button>
           <button className={page === "templates" ? "nav-tab active" : "nav-tab"} onClick={() => setPage("templates")}>
-            <span className="tab-icon">▤</span> Template
+            <span className="tab-icon">▤</span> Template ke dosen
           </button>
           <button className={page === "guide" ? "nav-tab active" : "nav-tab"} onClick={() => setPage("guide")}>
-            <span className="tab-icon">☼</span> Panduan etika
+            <span className="tab-icon">☼</span> Panduan dosen
           </button>
-          <span className="nav-caption">RUANG LATIHAN PRIBADI</span>
+          <span className="nav-caption">LATIHAN MAHASISWA KE DOSEN</span>
         </nav>
 
         {page === "simulator" && (
@@ -276,13 +276,13 @@ function App() {
               <div className="panel-heading">
                 <div>
                   <p className="section-kicker">RUANG SIMULASI</p>
-                  <h2>Racik pesanmu</h2>
-                  <p className="muted">Latihan dulu, kirim dengan lebih percaya diri.</p>
+                  <h2>Susun pesan untuk dosen</h2>
+                  <p className="muted">Latih pesan kuliah atau bimbingan sebelum menghubungi dosen.</p>
                 </div>
                 <span className="step-badge">01 <i>/ 02</i></span>
               </div>
 
-              <label className="field-label" htmlFor="persona">Pilih gaya dosen</label>
+              <label className="field-label" htmlFor="persona">Pilih gaya dosen dalam simulasi</label>
               <div className="persona-grid">
                 {(Object.entries(personas) as Array<[Persona, (typeof personas)[Persona]]>).map(([id, item]) => (
                   <button key={id} className={`persona-option ${persona === id ? "selected" : ""}`} onClick={() => setPersona(id)}>
@@ -294,7 +294,7 @@ function App() {
               </div>
 
               <div className="textarea-heading">
-                <label className="field-label" htmlFor="message">Tulis pesan latihan</label>
+                <label className="field-label" htmlFor="message">Tulis pesan untuk dosen</label>
                 <span className="character-count">{message.length} karakter</span>
               </div>
               <textarea
@@ -305,7 +305,7 @@ function App() {
                   setMessage(event.target.value);
                   setHasSimulated(false);
                 }}
-                placeholder={"Contoh: Selamat pagi, Bu. Perkenalkan, saya..."}
+                placeholder={"Contoh: Selamat pagi, Bu. Saya [nama] dari mata kuliah..."}
                 maxLength={1200}
               />
               <div className="input-footnote"><span>⌁</span> Jangan masukkan data pribadi yang tidak diperlukan.</div>
@@ -313,9 +313,9 @@ function App() {
 
               {hasSimulated && (
                 <div className="simulation-result" aria-live="polite">
-                  <div className="result-topline"><strong>Balasan simulasi · {personas[persona].name}</strong><span>CONTOH</span></div>
+                  <div className="result-topline"><strong>Contoh balasan dosen · {personas[persona].name}</strong><span>SIMULASI</span></div>
                   <p>{reply}</p>
-                  <small>Balasan ini dibuat berdasarkan aturan sederhana, bukan dosen sungguhan.</small>
+                  <small>Balasan ini hanya simulasi otomatis, bukan balasan dari dosen sungguhan.</small>
                 </div>
               )}
             </section>
@@ -323,7 +323,7 @@ function App() {
             <aside className="side-column">
               <section className="panel analysis-panel">
                 <div className="panel-heading compact-heading">
-                  <div><p className="section-kicker">CEK SEBELUM KIRIM</p><h2>Analisis pesan</h2></div>
+                  <div><p className="section-kicker">CEK SEBELUM MENGHUBUNGI DOSEN</p><h2>Analisis pesan</h2></div>
                   <span className="analysis-icon">✳</span>
                 </div>
                 <div className="score-row">
@@ -354,7 +354,7 @@ function App() {
               </section>
 
               <section className="panel export-panel">
-                <div className="export-title"><span className="export-icon">↗</span><div><strong>Siap dipakai?</strong><small>Periksa lagi sebelum dikirim.</small></div></div>
+                <div className="export-title"><span className="export-icon">↗</span><div><strong>Draf pesan ke dosen</strong><small>Periksa lagi sebelum dikirim.</small></div></div>
                 <label className="privacy-toggle"><input type="checkbox" checked={maskData} onChange={(event) => setMaskData(event.target.checked)} /><span>Samarkan kontak dan identitas pada draf ekspor</span></label>
                 <p className="mask-warning">Penyamaran otomatis bisa keliru; cek hasil draf secara manual.</p>
                 <div className="export-actions">
@@ -374,7 +374,7 @@ function App() {
         {page === "templates" && (
           <section className="panel template-page">
             <div className="panel-heading">
-              <div><p className="section-kicker">MULAI DARI CONTOH</p><h2>Template pesan akademik</h2><p className="muted">Pilih keperluan untuk melihat draf otomatis. Detail tambahan bersifat opsional.</p></div>
+              <div><p className="section-kicker">CONTOH PESAN UNTUK DOSEN</p><h2>Template pesan ke dosen</h2><p className="muted">Pilih topik kuliah atau konsultasi untuk membuat draf yang ditujukan kepada dosen.</p></div>
               <span className="step-badge">02 <i>/ 02</i></span>
             </div>
             <div className="template-layout">
@@ -382,7 +382,7 @@ function App() {
                 event.preventDefault();
                 loadTemplate();
               }}>
-                <label className="field-label" htmlFor="template-choice">Pilih keperluan</label>
+                <label className="field-label" htmlFor="template-choice">Topik pesan untuk dosen</label>
                 <select id="template-choice" className="form-control" value={templateId} onChange={(event) => setTemplateId(event.target.value)}>
                   {templates.map((item) => <option key={item.id} value={item.id}>{item.category} — {item.name}</option>)}
                 </select>
@@ -391,9 +391,9 @@ function App() {
                   <div><label className="field-label" htmlFor="student-npm">NPM <span className="required-label" aria-label="wajib diisi">*</span></label><input id="student-npm" className="form-control" value={studentNpm} onChange={(event) => setStudentNpm(event.target.value)} placeholder="Nomor pokok mahasiswa" aria-required="true" required /></div>
                 </div>
                 <label className="field-label" htmlFor="course">Mata kuliah / program <span className="required-label" aria-label="wajib diisi">*</span></label>
-                <input id="course" className="form-control" value={course} onChange={(event) => setCourse(event.target.value)} placeholder="Contoh: Teknik Informatika" aria-required="true" required />
+                <input id="course" className="form-control" value={course} onChange={(event) => setCourse(event.target.value)} placeholder="Contoh: Pemrograman Dasar atau Teknik Informatika" aria-required="true" required />
                 <label className="field-label" htmlFor="detail">Detail tambahan <span className="optional-label">(opsional)</span></label>
-                <textarea id="detail" className="message-input detail-input" value={detail} onChange={(event) => setDetail(event.target.value)} placeholder="Tambahkan konteks bila diperlukan. Template tetap lengkap jika dikosongkan." maxLength={500} />
+                <textarea id="detail" className="message-input detail-input" value={detail} onChange={(event) => setDetail(event.target.value)} placeholder="Tambahkan konteks kuliah atau bimbingan bila diperlukan (opsional)." maxLength={500} />
                 <button className="primary-button full-button" type="submit">Buat draf pesan <span>→</span></button>
               </form>
               <div className="template-preview">
@@ -407,24 +407,24 @@ function App() {
 
         {page === "guide" && (
           <section className="panel guide-page">
-            <div className="panel-heading"><div><p className="section-kicker">PANDUAN RINGKAS</p><h2>Etika menghubungi dosen</h2><p className="muted">Komunikasi yang baik menghargai waktu dan konteks kedua pihak.</p></div><span className="guide-icon">☼</span></div>
+            <div className="panel-heading"><div><p className="section-kicker">PANDUAN UNTUK MAHASISWA</p><h2>Etika menghubungi dosen</h2><p className="muted">Sampaikan konteks perkuliahan dengan jelas dan hargai waktu dosen.</p></div><span className="guide-icon">☼</span></div>
             <div className="guide-grid">
               <GuideCard number="01" title="Pilih waktu yang wajar" text="Kirim pesan pada jam kerja kecuali ada keadaan mendesak. Perhatikan juga kanal komunikasi yang dianjurkan dosen." />
-              <GuideCard number="02" title="Kenalkan diri" text="Sebutkan nama, kelas atau mata kuliah, dan informasi yang membantu dosen mengenali konteks pesan." />
-              <GuideCard number="03" title="Tulis maksud dengan jelas" text="Sampaikan tujuan utama secara ringkas. Beri konteks secukupnya dan ajukan pertanyaan yang spesifik." />
+              <GuideCard number="02" title="Kenalkan diri dan kelas" text="Sebutkan nama serta mata kuliah, kelas, atau topik bimbingan agar dosen memahami konteks pesan." />
+              <GuideCard number="03" title="Tanyakan hal akademik dengan jelas" text="Sampaikan topik kuliah atau bimbingan, beri konteks secukupnya, lalu ajukan pertanyaan yang spesifik." />
               <GuideCard number="04" title="Gunakan bahasa santun" text="Awali dengan salam, gunakan sapaan yang sesuai, hindari singkatan yang membingungkan, dan jangan menuntut balasan segera." />
               <GuideCard number="05" title="Beri waktu untuk membalas" text="Dosen mungkin sedang mengajar atau memiliki urusan lain. Jika perlu menindaklanjuti, tunggu waktu yang pantas." />
-              <GuideCard number="06" title="Jaga data pribadi" text="Bagikan hanya informasi yang diperlukan. Jangan mengirim kata sandi, kode verifikasi, atau data pribadi sensitif." />
+              <GuideCard number="06" title="Jaga data pribadi" text="Bagikan hanya informasi akademik yang diperlukan dosen. Jangan mengirim kata sandi, kode verifikasi, atau data sensitif." />
             </div>
-            <div className="guide-callout"><span>✦</span><p><strong>Ingat:</strong> setiap kampus dan dosen dapat memiliki kebiasaan komunikasi berbeda. Ikuti arahan resmi yang berlaku di lingkunganmu.</p></div>
+            <div className="guide-callout"><span>✦</span><p><strong>Ingat:</strong> ikuti kanal dan ketentuan komunikasi yang disampaikan dosen atau program studi. Template hanya contoh dan perlu disesuaikan dengan situasi.</p></div>
           </section>
         )}
 
         {notice && <div className="notice" role="status"><span>{notice}</span><button aria-label="Tutup pemberitahuan" onClick={() => setNotice("")}>×</button></div>}
 
         <footer className="page-footer">
-          <span>© 2026 SapaKampus · Ruang latihan komunikasi akademik</span>
-          <span>Tanpa akun · Tanpa penyimpanan pesan · Bukan pengganti arahan kampus</span>
+          <span>© 2026 SapaKampus · Latihan komunikasi mahasiswa kepada dosen</span>
+          <span>Tanpa akun · Pesan tidak disimpan · Simulasi bukan balasan dosen</span>
         </footer>
       </main>
     </div>
