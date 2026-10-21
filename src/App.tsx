@@ -147,15 +147,15 @@ function createTemplate(
   const messages: Record<string, string> = {
     guidance: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nSaya ingin meminta waktu untuk bimbingan.${context ? ` Sebagai konteks tambahan, ${context}` : ""}\n\nApakah Bapak/Ibu berkenan menginformasikan waktu yang tersedia?\n\nTerima kasih.`,
     absence: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nMohon izin tidak dapat mengikuti perkuliahan${context ? ` karena ${context}` : ""}.\n\nSaya akan berusaha mengejar materi yang tertinggal. Terima kasih atas pengertiannya.`,
-    question: `Selamat siang, Bapak/Ibu.\n\n${identity}\nSaya ingin bertanya mengenai ${context || "materi perkuliahan"}.\n\nApabila berkenan, mohon arahan Bapak/Ibu. Terima kasih.`,
+    question: `Selamat siang, Bapak/Ibu.\n\n${identity}\nSaya ingin bertanya${context ? ` mengenai ${context}` : ""}.\n\nApabila berkenan, mohon arahan Bapak/Ibu. Terima kasih.`,
     schedule: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nMohon informasi mengenai jadwal perkuliahan${context ? `, khususnya ${context}` : ""}.\n\nApabila ada perubahan jadwal, mohon informasinya. Terima kasih.`,
     exam: `Selamat siang, Bapak/Ibu.\n\n${identity}\nSaya ingin menanyakan informasi jadwal atau materi ujian${context ? ` terkait ${context}` : ""}.\n\nApabila informasi tersebut sudah tersedia, mohon arahannya. Terima kasih.`,
-    grade: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nMohon izin bertanya mengenai nilai${context ? ` pada ${context}` : " perkuliahan ini"}. Jika berkenan, saya ingin memahami bagian yang perlu saya perbaiki.\n\nTerima kasih atas waktu dan arahannya.`,
+    grade: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nMohon izin bertanya mengenai nilai${context ? ` pada ${context}` : ""}. Jika berkenan, saya ingin memahami bagian yang perlu saya perbaiki.\n\nTerima kasih atas waktu dan arahannya.`,
     deadline: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nMohon izin mengajukan perpanjangan waktu pengumpulan tugas${context ? ` karena ${context}` : ""}.\n\nSaya memahami keputusan tetap mengikuti kebijakan perkuliahan. Terima kasih atas pertimbangannya.`,
-    krs: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nSaya ingin berkonsultasi dengan Bapak/Ibu mengenai ${context || "pengisian KRS atau informasi KHS"}.\n\nApabila berkenan, mohon arahan akademik yang perlu saya perhatikan. Terima kasih.`,
+    krs: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nSaya ingin berkonsultasi dengan Bapak/Ibu${context ? ` mengenai ${context}` : ""}.\n\nApabila berkenan, mohon arahan akademik yang perlu saya perhatikan. Terima kasih.`,
     letter: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nSaya ingin meminta arahan Bapak/Ibu mengenai dokumen akademik${context ? ` untuk keperluan ${context}` : ""}.\n\nApabila berkenan, mohon informasi tentang hal yang perlu saya siapkan. Terima kasih.`,
-    internship: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nSaya ingin meminta arahan mengenai ${context || "rencana magang atau tugas akhir"}.\n\nApabila Bapak/Ibu berkenan, mohon informasi mengenai langkah awal yang sebaiknya saya persiapkan. Terima kasih.`,
-    followup: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nMohon izin menindaklanjuti pesan saya sebelumnya kepada Bapak/Ibu terkait ${context || "keperluan akademik tersebut"}.\n\nApabila Bapak/Ibu berkenan, mohon informasinya. Terima kasih.`,
+    internship: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nSaya ingin meminta arahan${context ? ` mengenai ${context}` : ""}.\n\nApabila Bapak/Ibu berkenan, mohon informasi mengenai langkah awal yang sebaiknya saya persiapkan. Terima kasih.`,
+    followup: `Selamat pagi, Bapak/Ibu.\n\n${identity}\nMohon izin menindaklanjuti pesan saya sebelumnya kepada Bapak/Ibu${context ? ` terkait ${context}` : ""}.\n\nApabila Bapak/Ibu berkenan, mohon informasinya. Terima kasih.`,
   };
   return messages[id] ?? "";
 }
